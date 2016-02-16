@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+	<title>LED Controller</title>
+	<meta name="viewport" content="width=400px" />
+	<script src="socket.io/socket.io.js"></script>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<input type="range" id= "inputSlider1" min="0" max="255" value="50" step="1" 
+		oninput="showValue(this.value, 'outputText1', 'led1')" />
+	<br><span id="outputText1">50</span>
+	<br>
+	<br>
+	<input type="range" id= "inputSlider2" min="0" max="255" value="10" step="1" 
+		oninput="showValue(this.value, 'outputText2', 'led2')" />
+	<br><span id="outputText2">50</span>
+	<br>
+	<br>
+	<input type="range" id= "inputSlider3" min="0" max="255" value="20" step="1" 
+		oninput="showValue(this.value, 'outputText3', 'led3')" />
+	<br><span id="outputText3">50</span>
+	
+	<script type="text/javascript">
+		var socket = io.connect();		
+		socket.on('led1', function (data) {
+			document.getElementById("inputSlider1").value = data.value;
+			document.getElementById("outputText1").innerHTML = data.value;
+			console.log("Slider 1=" + data.value);
+		});		
+		socket.on('led2', function (data) {
+			document.getElementById("inputSlider2").value = data.value;
+			document.getElementById("outputText2").innerHTML = data.value;
+			console.log("Slider 2=" + data.value);
+		});
+		socket.on('led3', function (data) {
+			document.getElementById("inputSlider3").value = data.value;
+			document.getElementById("outputText3").innerHTML = data.value;
+			console.log("Slider 3=" + data.value);
+		});
+		
+		function showValue(newValue, itext, led)
+		{
+			document.getElementById(itext).innerHTML=newValue;
+			socket.emit(led, { value: newValue });
+		}
+	</script>
+  </body>
+</html>
